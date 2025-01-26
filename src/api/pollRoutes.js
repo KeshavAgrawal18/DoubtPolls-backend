@@ -5,6 +5,7 @@ import {
   updatePoll,
   deletePoll,
   getPollResults,
+  getAllPolls,
 } from "../controllers/pollController.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 import adminMiddleware from "../middlewares/adminMiddleware.js";
@@ -13,6 +14,9 @@ const router = express.Router();
 
 // Create a new poll
 router.post("/", authMiddleware, createPoll);
+
+// Get all polls for user
+router.get("/all", authMiddleware, getAllPolls);
 
 // Get poll details by ID
 router.get("/:pollId", getPollDetails);

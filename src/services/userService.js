@@ -41,21 +41,23 @@ export const registerUser = async (userData) => {
 export const loginUser = async (email, password) => {
   try {
     // Retrieve the user by email
-    const user = await userRepository.getUserByEmail(email);
+    const response = await userRepository.getUserByEmail(email);
 
+    if (!response) throw new Error("Invalid email or password");
+    const { password: hashedPassword, ...user } = response;
     if (!user) {
       throw new Error("Invalid email or password");
     }
 
     // Compare the provided password with the hashed password
-    const isPasswordValid = await verifyPassword(password, user.password);
+    const isPasswordValid = await verifyPassword(password, hashedPassword);
     if (!isPasswordValid) {
       throw new Error("Invalid email or password");
     }
 
     const token = generateToken({ id: user.id, email: user.email });
 
-    return { token };
+    return { token, user };
   } catch (error) {
     throw new Error(error.message || "Authentication failed");
   }

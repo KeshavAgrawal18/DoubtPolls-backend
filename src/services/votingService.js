@@ -31,29 +31,25 @@ export const hasUserVoted = async (pollId, userId) => {
 /**
  * Get poll results by poll ID.
  * @param {string} pollId - The ID of the poll.
- * @returns {Object} The poll results and the winning choices.
+ * @returns {Object} The poll results.
  */
 export const getPollResults = async (pollId) => {
   try {
-    // Fetch raw vote counts from the repository
-    const voteCounts = await votingRepository.getPollResults(pollId);
-
-    let maxVotes = 0;
-    const results = voteCounts.map((entry) => {
-      const votes = parseInt(entry.votes, 10);
-      if (votes > maxVotes) {
-        maxVotes = votes;
-      }
-      return { choice: entry.choice, votes };
-    });
-
-    // Determine all winning choices (handling ties)
-    const winningChoices = results
-      .filter((entry) => entry.votes === maxVotes)
-      .map((entry) => entry.choice);
-
-    return { results, winningChoices };
+    return await votingRepository.getPollResults(pollId);
   } catch (error) {
     throw new Error(`Failed to fetch poll results: ${error.message}`);
+  }
+};
+
+/**
+ * Get all votes cast by a specific user.
+ * @param {string} userId - The ID of the user.
+ * @returns {Promise<Array>} List of votes cast by the user.
+ */
+export const getUserVotes = async (userId) => {
+  try {
+    return await votingRepository.getVotesByUserId(userId);
+  } catch (error) {
+    throw new Error(`Failed to fetch user votes: ${error.message}`);
   }
 };

@@ -31,3 +31,18 @@ export const hasUserVoted = async (req, res) => {
     res.status(400).json({ success: false, message: error.message });
   }
 };
+
+/**
+ * Get all votes cast by a specific user.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ */
+export const getUserVotes = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const votes = await votingService.getUserVotes(userId);
+    res.status(200).json({ success: true, data: votes });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};

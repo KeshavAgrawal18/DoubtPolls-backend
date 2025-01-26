@@ -84,3 +84,19 @@ export const getPollResults = async (req, res) => {
     res.status(400).json({ success: false, message: error.message });
   }
 };
+
+/**
+ * Get all polls.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ */
+export const getAllPolls = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const polls = await pollService.getUserPolls(userId);
+    res.status(200).json({ success: true, data: polls });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};

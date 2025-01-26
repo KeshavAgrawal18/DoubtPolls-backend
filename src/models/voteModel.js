@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../db/conection.js";
+import Poll from "./pollModel.js";
 
 class Vote extends Model {}
 
@@ -13,12 +14,16 @@ Vote.init(
     pollId: {
       type: DataTypes.UUID,
       allowNull: false,
+      references: {
+        model: "polls", // References the "polls" table
+        key: "id",
+      },
     },
     userId: {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    choice: {
+    optionId: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -30,5 +35,9 @@ Vote.init(
     timestamps: true,
   }
 );
+
+// Define associations
+Vote.belongsTo(Poll, { foreignKey: "pollId", as: "poll" });
+Poll.hasMany(Vote, { foreignKey: "pollId", as: "votes" });
 
 export default Vote;

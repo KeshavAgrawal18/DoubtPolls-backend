@@ -6,9 +6,12 @@ import * as pollRepository from "../dataAccess/pollRepository.js";
  * @returns {Promise<Object>} The created poll.
  */
 export const createPoll = async (pollData) => {
-  console.log({ pollData });
-
-  return await pollRepository.createPoll(pollData);
+  try {
+    return await pollRepository.createPoll(pollData);
+  } catch (error) {
+    console.error("Error creating poll:", error);
+    throw error; // Re-throw the error for further handling, if necessary
+  }
 };
 
 /**

@@ -10,7 +10,7 @@ Poll.init(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    question: {
+    title: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
@@ -19,8 +19,22 @@ Poll.init(
       allowNull: true, // Optional description for the poll
     },
     options: {
-      type: DataTypes.ARRAY(DataTypes.STRING), // PostgreSQL array for storing poll options
+      type: DataTypes.JSONB, // JSONB type to store an array of objects
       allowNull: false,
+      validate: {
+        isArrayOfObjectsWithLabel(value) {
+          if (!Array.isArray(value)) {
+            throw new Error("Options must be an array of objects.");
+          }
+          for (const option of value) {
+            if (typeof option.label !== "string" || !option.label.trim()) {
+              throw new Error(
+                "Each option must have a non-empty 'label' of type string."
+              );
+            }
+          }
+        },
+      },
     },
     creatorId: {
       type: DataTypes.UUID,

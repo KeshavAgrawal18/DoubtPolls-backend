@@ -30,11 +30,10 @@ export const getUserDetails = async (req, res) => {
 export const registerUser = async (req, res) => {
   try {
     const userData = req.body;
-    const newUser = await userService.registerUser(userData);
+    await userService.registerUser(userData);
     res.status(201).json({
       success: true,
       message: "User registered successfully",
-      data: newUser,
     });
   } catch (error) {
     res.status(error.statusCode || 400).json({
