@@ -5,18 +5,14 @@ import dotenv from "dotenv";
 // Load environment variables
 dotenv.config();
 
-// Create Sequelize instance
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST,
-    dialect: process.env.DB_DIALECT || "postgres",
-    logging: false, // Change to `msg => logger.info(msg)` for SQL query logging
-  }
-);
-
+// Create Sequelize instance using DATABASE_URL
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: "postgres", // Default to "postgres" since DATABASE_URL is commonly used with PostgreSQL
+  dialectOptions: {
+    ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false, // Enable SSL if specified
+  },
+  logging: false, // Change to `msg => logger.info(msg)` for SQL query logging
+});
 /**
  * Connect to the database and ensure it's ready to use.
  */
